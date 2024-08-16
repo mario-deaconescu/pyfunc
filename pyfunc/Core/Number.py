@@ -1,8 +1,9 @@
 from . import Integer, Float
+from .Fun import fun1
 
 t = Integer.t | Float.t
 
-
+@fun1
 def to_string(value: t) -> str:
     match value:
         case integer if isinstance(integer, Integer.t):

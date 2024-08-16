@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional, Callable, TypeVar
 
+from pyfunc.Core.Fun import fun1
+
 
 @dataclass
 class Some[T]:
@@ -10,6 +12,11 @@ class Some[T]:
 T = TypeVar('T')
 
 t = Optional[Some[T]]
+
+
+@fun1
+def some[T](value: T) -> t[T]:
+    return Some(value)
 
 
 def map[T, U](optional: t[T], f: Callable[[T], U]) -> t[U]:

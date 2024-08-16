@@ -2,9 +2,12 @@ import asyncio
 from asyncio import Future
 from typing import Callable
 
+from pyfunc.Core.Fun import fun1
+
 t = Future
 
 
+@fun1
 def of[T](value: T) -> t[T]:
     future = Future()
     future.set_result(value)
@@ -32,5 +35,6 @@ def after[T](delay: float, value: T) -> t[T]:
     return future
 
 
+@fun1
 def sync[T](effect: t[T]) -> T:
     return asyncio.get_event_loop().run_until_complete(effect)

@@ -1,5 +1,6 @@
 from typing import TypeVar, Callable
 from pyfunc import Option
+from pyfunc.Core.Fun import fun1
 
 
 class Nil[_]:
@@ -49,6 +50,7 @@ def foldl[T, U](list: t[T], f: Callable[[U, T], U], initial: U) -> U:
             return foldl(tail, f, f(initial, head))
 
 
+@fun1
 def length[T](list: t[T]) -> int:
     return foldr(list, lambda acc, _: acc + 1, 0)
 
@@ -57,12 +59,13 @@ def filter[T](list: t[T], f: Callable[[T], bool]) -> t[T]:
     return foldr(list, lambda acc, x: Cons(x, acc) if f(x) else acc, Nil())
 
 
+@fun1
 def reverse[T](list: t[T]) -> t[T]:
     return foldl(list, lambda acc, x: Cons(x, acc), Nil())
 
 
 def append[T](list1: t[T], list2: t[T]) -> t[T]:
-    return foldr(list1, Cons, list2)
+    return foldr(list1, lambda acc, x: Cons(x, acc), list2)
 
 
 def zip[T, U](list1: t[T], list2: t[U]) -> Option.t[t[tuple[T, U]]]:
@@ -70,7 +73,7 @@ def zip[T, U](list1: t[T], list2: t[U]) -> Option.t[t[tuple[T, U]]]:
         case Cons((head1, tail1)), Cons((head2, tail2)):
             match zip(tail1, tail2):
                 case Option.Some(zipped):
-                    return Option.Some(Cons((head1, head2), zipped))
+                    return Cons((head1, head2), zipped) >> Option.some
                 case None:
                     return None
         case Nil(), Nil():

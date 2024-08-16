@@ -1,8 +1,10 @@
 from pyfunc.Core import Number, String, Boolean, Integer
+from pyfunc.Core.Fun import fun1
 
 t = Number.t | String.t | Boolean.t
 
 
+@fun1
 def to_json(value: t) -> str:
     match value:
         case boolean if isinstance(boolean, Boolean.t):

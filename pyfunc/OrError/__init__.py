@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import TypeVar, Callable
 
 from pyfunc.Core import Map, List
+from pyfunc.Core.Fun import fun1
 
 
 @dataclass
@@ -19,14 +20,17 @@ T = TypeVar('T')
 t = Ok[T] | Error
 
 
+@fun1
 def ok[T](value: T) -> t[T]:
     return Ok(value)
 
 
+@fun1
 def error[T](exception: Exception) -> t[T]:
     return Error(exception)
 
 
+@fun1
 def ok_exn[T](value: t[T]) -> T:
     match value:
         case Ok(x):
@@ -35,6 +39,7 @@ def ok_exn[T](value: t[T]) -> T:
             raise e
 
 
+@fun1
 def all[T](list: List.t[t[T]]) -> t[List.t[T]]:
     try:
         return ok(List.map(list, ok_exn))
@@ -42,6 +47,7 @@ def all[T](list: List.t[t[T]]) -> t[List.t[T]]:
         return error(e)
 
 
+@fun1
 def all_map[T, U](map: Map.t[T, t[U]]) -> t[Map.t[T, U]]:
     try:
         return ok(Map.map(map, ok_exn))
@@ -49,6 +55,7 @@ def all_map[T, U](map: Map.t[T, t[U]]) -> t[Map.t[T, U]]:
         return error(e)
 
 
+@fun1
 def try_with[T](f: Callable[[], T]) -> t[T]:
     try:
         return ok(f())
@@ -56,6 +63,7 @@ def try_with[T](f: Callable[[], T]) -> t[T]:
         return error(e)
 
 
+@fun1
 def is_ok[T](value: t[T]) -> bool:
     match value:
         case Ok(_):
@@ -64,6 +72,7 @@ def is_ok[T](value: t[T]) -> bool:
             return False
 
 
+@fun1
 def is_error[T](value: t[T]) -> bool:
     return not is_ok(value)
 

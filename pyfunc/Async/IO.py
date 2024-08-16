@@ -8,6 +8,8 @@ from . import Pipe
 import aiofiles
 import asyncio
 
+from ..Core.Fun import fun1
+
 
 @dataclass
 class t:
@@ -22,10 +24,12 @@ def open(filename: str, mode: Literal['r', 'w']) -> Effect.t[t]:
     return Effect.map(asyncio.ensure_future(aiofiles.open(filename, mode=mode).__aenter__()), lambda f: t(f))
 
 
+@fun1
 def read(io: t) -> Effect.t[str]:
     return asyncio.ensure_future(io._value.read())
 
 
+@fun1
 def read_lines(io: t) -> Pipe.t[str]:
     async def f():
         async for line in io._value:
