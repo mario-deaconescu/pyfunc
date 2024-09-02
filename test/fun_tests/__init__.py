@@ -1,1 +1,1 @@
-from . import curry
+from .curry import *

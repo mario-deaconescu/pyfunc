@@ -1,3 +1,7 @@
+from pyfunc.Trace import trace
+
+
+@trace
 def test_file():
     from pyfunc.Async.Effect import sync, bind
     from pyfunc.Async.IO import open, read
@@ -8,6 +12,7 @@ def test_file():
     assert str == 'Line 1\nLine 2\nLine 3\n'
 
 
+@trace
 def test_file_pipe():
     from pyfunc.Async.Effect import sync, map, bind
     from pyfunc.Async.IO import open, read_lines

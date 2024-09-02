@@ -1,3 +1,7 @@
+from pyfunc.Trace import trace
+
+
+@trace
 def test_range():
     from pyfunc.Core import List
     list = List.init(5, lambda x: x ** 2)

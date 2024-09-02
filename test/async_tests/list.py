@@ -1,3 +1,7 @@
+from pyfunc.Trace import trace
+
+
+@trace
 def test_async_list():
     from pyfunc.Async.Effect import after, sync
     from pyfunc.Async.List import map

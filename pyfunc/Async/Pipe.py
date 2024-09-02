@@ -5,6 +5,7 @@ import asyncio
 
 from . import Effect
 from ..Core.Fun import fun1
+from ..Trace import trace
 
 
 @dataclass
@@ -12,6 +13,7 @@ class t[T]:
     _value: AsyncIterable[T]
 
 
+@trace
 def map[T, U](pipe: t[T], f: Callable[[T], U]) -> t[U]:
     async def fun():
         async for x in pipe._value:
@@ -20,6 +22,7 @@ def map[T, U](pipe: t[T], f: Callable[[T], U]) -> t[U]:
     return t(fun())
 
 
+@trace
 def iter[T](pipe: t[T], f: Callable[[T], None]) -> Effect.t[None]:
     async def fun():
         async for x in pipe._value:
@@ -29,6 +32,7 @@ def iter[T](pipe: t[T], f: Callable[[T], None]) -> Effect.t[None]:
 
 
 @fun1
+@trace
 def to_list[T](pipe: t[T]) -> Effect.t[list[T]]:
     async def fun():
         return [x async for x in pipe._value]

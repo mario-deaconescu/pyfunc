@@ -2,8 +2,10 @@ from typing import Callable, Literal
 
 from . import Effect
 from pyfunc.Core import List
+from ..Trace import trace
 
 
+@trace
 def map[T, U](list: List.t[T], f: Callable[[T], Effect.t[U]], mode: Literal['sequential', 'parallel']) -> \
         Effect.t[List.t[U]]:
     def map_sequential(list: List.t[T]) -> Effect.t[List.t[U]]:
@@ -19,7 +21,7 @@ def map[T, U](list: List.t[T], f: Callable[[T], Effect.t[U]], mode: Literal['seq
                 return Effect.of(List.Nil())
             case List.Cons((head, tail)):
                 return Effect.bind(f(head),
-                                  lambda x: Effect.bind(map_parallel(tail), lambda y: Effect.of(List.Cons(x, y))))
+                                   lambda x: Effect.bind(map_parallel(tail), lambda y: Effect.of(List.Cons(x, y))))
 
     match mode:
         case 'sequential':
@@ -28,6 +30,7 @@ def map[T, U](list: List.t[T], f: Callable[[T], Effect.t[U]], mode: Literal['seq
             return map_parallel(list)
 
 
+@trace
 def iter[T](list: List.t[T], f: Callable[[T], Effect.t[None]], mode: Literal['sequential', 'parallel']) -> \
         Effect.t[None]:
     return Effect.map(map(list, lambda x: f(x), mode), lambda _: None)

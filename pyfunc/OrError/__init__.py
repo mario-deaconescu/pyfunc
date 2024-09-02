@@ -1,8 +1,10 @@
+from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import TypeVar, Callable
+from typing import TypeVar, Callable, Generator
 
 from pyfunc.Core import Map, List
 from pyfunc.Core.Fun import fun1
+from pyfunc.Trace import trace
 
 
 @dataclass
@@ -21,16 +23,19 @@ t = Ok[T] | Error
 
 
 @fun1
+@trace
 def ok[T](value: T) -> t[T]:
     return Ok(value)
 
 
 @fun1
+@trace
 def error[T](exception: Exception) -> t[T]:
     return Error(exception)
 
 
 @fun1
+@trace
 def ok_exn[T](value: t[T]) -> T:
     match value:
         case Ok(x):
@@ -40,6 +45,7 @@ def ok_exn[T](value: t[T]) -> T:
 
 
 @fun1
+@trace
 def all[T](list: List.t[t[T]]) -> t[List.t[T]]:
     try:
         return ok(List.map(list, ok_exn))
@@ -48,6 +54,7 @@ def all[T](list: List.t[t[T]]) -> t[List.t[T]]:
 
 
 @fun1
+@trace
 def all_map[T, U](map: Map.t[T, t[U]]) -> t[Map.t[T, U]]:
     try:
         return ok(Map.map(map, ok_exn))
@@ -56,6 +63,7 @@ def all_map[T, U](map: Map.t[T, t[U]]) -> t[Map.t[T, U]]:
 
 
 @fun1
+@trace
 def try_with[T](f: Callable[[], T]) -> t[T]:
     try:
         return ok(f())
@@ -64,6 +72,7 @@ def try_with[T](f: Callable[[], T]) -> t[T]:
 
 
 @fun1
+@trace
 def is_ok[T](value: t[T]) -> bool:
     match value:
         case Ok(_):
@@ -73,10 +82,12 @@ def is_ok[T](value: t[T]) -> bool:
 
 
 @fun1
+@trace
 def is_error[T](value: t[T]) -> bool:
     return not is_ok(value)
 
 
+@trace
 def map[T, U](value: t[T], f: Callable[[T], U]) -> t[U]:
     match value:
         case Ok(x):
@@ -85,6 +96,7 @@ def map[T, U](value: t[T], f: Callable[[T], U]) -> t[U]:
             return Error(e)
 
 
+@trace
 def bind[T, U](value: t[T], f: Callable[[T], t[U]]) -> t[U]:
     match value:
         case Ok(x):

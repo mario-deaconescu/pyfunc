@@ -1,9 +1,12 @@
 from . import Integer, Float
 from .Fun import fun1
+from ..Trace import trace
 
 t = Integer.t | Float.t
 
+
 @fun1
+@trace
 def to_string(value: t) -> str:
     match value:
         case integer if isinstance(integer, Integer.t):

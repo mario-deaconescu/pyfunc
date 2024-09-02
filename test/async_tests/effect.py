@@ -1,3 +1,7 @@
+from pyfunc.Trace import trace
+
+
+@trace
 def test_async_simple():
     from pyfunc.Async.Effect import of, map, bind, sync
     effect1 = of(1)
@@ -6,7 +10,7 @@ def test_async_simple():
 
     assert sync(effect3) == 3
 
-
+@trace
 def test_async_after():
     from pyfunc.Async.Effect import after, map, bind, sync
     effect1 = after(0.1, 1)

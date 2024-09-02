@@ -9,6 +9,7 @@ import aiofiles
 import asyncio
 
 from ..Core.Fun import fun1
+from ..Trace import trace
 
 
 @dataclass
@@ -16,6 +17,7 @@ class t:
     _value: aiofiles.threadpool.text.AsyncTextIOWrapper
 
 
+@trace
 def open(filename: str, mode: Literal['r', 'w']) -> Effect.t[t]:
     # Check if file exists
     if mode == 'r':
@@ -25,6 +27,7 @@ def open(filename: str, mode: Literal['r', 'w']) -> Effect.t[t]:
 
 
 @fun1
+@trace
 def read(io: t) -> Effect.t[str]:
     return asyncio.ensure_future(io._value.read())
 

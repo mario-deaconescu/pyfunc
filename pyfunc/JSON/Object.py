@@ -1,9 +1,11 @@
 from pyfunc.Core import List, Map, String, Boolean, Integer
 from pyfunc.JSON import Value
+from pyfunc.Trace import trace
 
 t = Value.t | List.t['t'] | Map.t[String.t, 't'] | None
 
 
+@trace
 def to_json(obj: t, compact: Boolean.t = False, spaces: Integer.t = 2) -> String.t:
     match compact:
         case True:
